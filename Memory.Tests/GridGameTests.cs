@@ -31,7 +31,7 @@ namespace Memory.Tests {
             grid.Cards.Select(a => a.CardId).Distinct().Should().HaveCount(16);
         }
 
-        [Fact(DisplayName = "chaque carte doit avoir une image id associée à une autre carte")]
+        [Fact(DisplayName = "Chaque carte doit avoir une image id associée à une autre carte")]
         public void Test35()
         {
             GridGame grid = new GridGame(Player.Player1, Player.Player2);

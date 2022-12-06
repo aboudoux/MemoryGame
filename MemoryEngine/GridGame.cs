@@ -25,4 +25,11 @@ public class GridGame
         Cards = cards.ToArray();
     }
     public Card[] Cards { get; }
+
+    public Player Turn { get; }
+
+    public void Start()
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -1,4 +1,86 @@
 ﻿@page "/"
+@using MemoryEngine
+@using Card = MemoryGame.Components.Card
 
 <PageTitle>Welcome to memory !</PageTitle>
 
+@if (!_game.IsGameStarted)
+{
+    <div style="background-image: url('home.png')" class="w-full h-screen flex items-center justify-center">
+        <div class="flex flex-col items-center">
+        <span class="mb-20 text-8xl font-bold text-blue-500">Titi MEMORY !</span>
+            <button @onclick="StartGame" class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-lg">START NEW GAME</button>
+        </div>
+    </div>
+    
+}
+else if (_game.Status.State == GameState.PlayerWin)
+{
+    <div style="background-image: url('win.png')" class="w-full h-screen flex items-center justify-center">
+      <div class="text-4xl font-bold text-blue-600 animate-pulse">
+            BRAVO @WinnerText
+        </div>
+        
+    </div>
+}
+else if (_game.Status.State == GameState.Execo)
+{
+    <div style="background-image: url('equal.jpg')" class="w-full h-screen flex items-center justify-center">
+        <div class="text-4xl font-bold text-yellow-100 animate-pulse">
+        ! ÉGALITÉ !
+        </div>
+        
+    </div>
+}
+else
+{
+    <div class="flex flex-col justify-center w-full h-screen items-center bg-gray-200 gap-6" style="background-image: url('table.png')">
+      <div class="flex flex-row justify-around w-full">
+          <div class="text-4xl font-bold  @CssTurnPlayer(Player.Player1)">Player 1 : @_game.Score[Player.Player1].ToString()</div>
+        <div class="text-4xl font-bold  @CssTurnPlayer(Player.Player2)">Player 2 : @_game.Score[Player.Player2].ToString()</div>
+        </div>
+        <div class="grid grid-rows-[max-content,max-content,max-content,max-content] grid-cols-[max-content,max-content,max-content,max-content] gap-8">
+            @foreach (var card in _game.Cards)
+            {
+                <div><Card Background="@BackgroundId" Source="card" OnClick="OnClick" CheatMode="CheatMode"></Card></div>
+            }
+        </div>
+    </div>
+}
+
+@code
+{
+    private GridGame _game = new(Player.Player1, Player.Player2);
+    private int BackgroundId { get; set; } = 1;
+
+    private bool CheatMode { get; set; }
+
+    private string WinnerText => _game.Status.Winner switch
+    {
+        Player.Player1 => "Joueur 1",
+        Player.Player2 => "Joueur 2",
+        _ => throw new ArgumentOutOfRangeException()};
+
+    private string CssTurnPlayer(Player player) => _game.CurrentPlayer == player ? "border-red-500 border-2 rounded-lg p-2 bg-red-300" : "text-white";
+
+    private void StartGame(MouseEventArgs eventArgs)
+    {
+        if (eventArgs.AltKey)
+            CheatMode = false;
+
+        BackgroundId = Random.Shared.Next(1, 4);
+        _game = new GridGame(Player.Player1, Player.Player2);
+        _game.Start();
+    }
+
+    public async Task OnClick(MemoryEngine.Card card)
+    {
+        if (_game.Show(card.CardId) == 2)
+        {
+            await Task.Delay(2000);
+            _game.Check();
+            if(_game.Cards.All(a=>a.State == CardState.Removed))
+                _game.Check();
+        }
+    }
+}

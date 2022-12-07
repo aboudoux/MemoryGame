@@ -9,7 +9,7 @@ public class GridGame
     public GridGame(params Player[] players)
     {
         if (players.Length < 2)
-            throw new Exception();
+            throw new NotEnoughPlayerException();
 
         if (players.Distinct().Count() != players.Length)
             throw new SamePlayerException();
@@ -30,15 +30,35 @@ public class GridGame
     }
     public Card[] Cards { get; }
 
-    public Player Turn { get; }
+    public Player CurrentPlayer { get; set; }
+
+    public void NextPlayer()
+    {
+        CurrentPlayer = (Player)(((int)CurrentPlayer + 1) % 3);
+    }
 
     public void Start()
     {
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
+        CurrentPlayer = Player.Player1;
     }
+
+    private int CardsRevealedByCurrentPlayer = 0;
 
     public void Show(int cardId)
     {
-
+        var card = Cards.SingleOrDefault(c => c.CardId == cardId);
+        if (card == null)
+        {
+            return;
+        }
+        else
+        {
+            if (CurrentPlayer != Player.None && CardsRevealedByCurrentPlayer < 2)
+            {
+                card.State = Card.CardState.Visible;
+                CardsRevealedByCurrentPlayer++;
+            }
+        }
     }
 }

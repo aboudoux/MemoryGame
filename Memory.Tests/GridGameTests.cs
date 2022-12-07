@@ -127,7 +127,7 @@ namespace Memory.Tests {
             {
                 GridGame grid = new GridGame(Player.Player1, Player.Player2);
                 var allImages = grid.Cards.Select(a => a.ImageId).ToArray();
-                allImages.Should().NotBeEquivalentTo(imagesIds);
+                allImages.Should().NotBeEquivalentTo(imagesIds, a=>a.WithStrictOrdering());
                 imagesIds = allImages;
 
                 allImages.All(a => a is >= 1 and <= (2 * 8)).Should().BeTrue();

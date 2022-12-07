@@ -2,13 +2,18 @@
 
 public class Card
 {
-    public CardId CardId { get; }
-    public CardState State { get; }
-
-    public Card(int id, int iid) {
-        CardId = new CardId(id);
-        ImageId= new ImageId(iid);
+    public enum CardState
+    {
+        Visible = 1,
+        Hidden = 2,
     }
 
-    public ImageId ImageId { get; }
+    public int CardId { get; } = 0;
+    public CardState State { get; } = CardState.Hidden;
+
+    public int ImageId { get; } = 0;
+
+    public Card(int cardId, int imageId) {
+
+    }
 }

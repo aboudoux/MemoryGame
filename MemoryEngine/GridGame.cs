@@ -35,6 +35,7 @@ public class GridGame
     public void NextPlayer()
     {
         CurrentPlayer = (Player)(((int)CurrentPlayer + 1) % 3);
+        CardsRevealedByCurrentPlayer = 0;
     }
 
     public void Start()

@@ -32,4 +32,9 @@ public class GridGame
     {
         throw new NotImplementedException();
     }
+
+    public void Show(CardId cardId)
+    {
+
+    }
 }

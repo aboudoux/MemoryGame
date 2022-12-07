@@ -11,8 +11,4 @@ public class Card
     }
 
     public ImageId ImageId { get; }
-    public void Show()
-    {
-        
-    }
 }

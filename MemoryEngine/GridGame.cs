@@ -1,22 +1,19 @@
-﻿namespace MemoryEngine;
+﻿using MemoryEngine.Exceptions;
+
+namespace MemoryEngine;
 
 public class GridGame
 {
-    public enum Player
-    {
-        None = 0,
-        Player1 = 1, 
-        Player2 = 2,
-    }
+    
 
     public GridGame(params Player[] players)
     {
         if (players.Length < 2)
-        {
             throw new Exception();
-        }
+
         if (players.Distinct().Count() != players.Length)
-        { throw new Exception(); }
+            throw new SamePlayerException();
+        
         List<Card> cards = new List<Card>();
         foreach (var player in players)
         {
@@ -40,7 +37,7 @@ public class GridGame
         throw new NotImplementedException();
     }
 
-    public void Show(CardId cardId)
+    public void Show(int cardId)
     {
 
     }

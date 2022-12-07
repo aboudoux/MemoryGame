@@ -1,5 +1,6 @@
 using FluentAssertions;
 using MemoryEngine;
+using MemoryEngine.Exceptions;
 
 namespace Memory.Tests {
     public class GridGameTests 
@@ -7,13 +8,13 @@ namespace Memory.Tests {
         [Fact(DisplayName = "Une grille ne peux pas avoir 2 fois le même joueur")]
         public void Test16() 
         {
-            FluentActions.Invoking(() => new GridGame(Player.Player1, Player.Player1)).Should().Throw<Exception>();
+            FluentActions.Invoking(() => new GridGame(Player.Player1, Player.Player1)).Should().Throw<SamePlayerException>();
         }
 
         [Fact(DisplayName = "Une grille doit au moins avoir 2 joueurs minimum")]
         public void Test14()
         {
-            FluentActions.Invoking(() => new GridGame(Player.Player1)).Should().Throw<Exception>();
+            FluentActions.Invoking(() => new GridGame(Player.Player1)).Should().Throw<NotEnoughPlayerException>(); // afficher "le jeux doit avoir au moins 2 joueurs"
         }
 
         private class Test1Class : TheoryData<(Player[] players, int expectedCards)>
@@ -21,7 +22,7 @@ namespace Memory.Tests {
             public Test1Class()
             {
                 Add((new []{ Player.Player1, Player.Player2}, 16) );
-                Add((new []{ Player.Player1, Player.Player2, new Player(3) }, 24) );
+                Add((new []{ Player.Player1, Player.Player2, Player.Player3 }, 24) );
             }
         }
 
@@ -52,7 +53,7 @@ namespace Memory.Tests {
         public void Test52()
         {
             GridGame grid = new GridGame(Player.Player1, Player.Player2);
-            grid.Cards.All(a => a.State.Equals(CardState.Hidden)).Should().BeTrue();
+            grid.Cards.All(a => a.State.Equals(Card.CardState.Hidden)).Should().BeTrue();
         }
 
 
@@ -71,11 +72,12 @@ namespace Memory.Tests {
             grid.Turn.Should().Be(Player.Player1);
         }
 
-        [Fact(DisplayName = "Le jeu retourne une erreur si j'essaye de révéler une carte alors que c'est le tour de personne")]
+        [Fact(DisplayName = "Le jeu ne revele aucune carte si j'essaye de révéler une carte alors que c'est le tour de personne")]
         public void Test75()
         {
             GridGame grid = new GridGame(Player.Player1, Player.Player2);
-            FluentActions.Invoking(() => grid.Cards[0].Show()).Should().Throw<Exception>();
+            grid.Show(1);
+            grid.Cards.All(a => a.State == Card.CardState.Hidden).Should().BeTrue();
         }
 
         [Fact(DisplayName = "Un joueur peu demander à reveler une carte quand c'est sont tour")]
@@ -83,8 +85,8 @@ namespace Memory.Tests {
         {
             GridGame grid = new GridGame(Player.Player1, Player.Player2);
             grid.Start();
-            grid.Cards[0].Show();
-            grid.Cards[0].State.Should().Be(CardState.Visible);
+            grid.Show(1);
+            grid.GetCard(1).State.Should().Be(Card.CardState.Visible);
         }
 
         [Fact(DisplayName = "Un joueur ne peux pas réveler + de 2 cartes")]
@@ -92,13 +94,13 @@ namespace Memory.Tests {
         {
             GridGame grid = new GridGame(Player.Player1, Player.Player2);
             grid.Start();
-            grid.Cards[0].Show();
-            grid.Cards[1].Show();
-            grid.Cards[2].Show();
+            grid.Show(1);
+            grid.Show(2);
+            grid.Show(2);
 
-            grid.Cards[0].State.Should().Be(CardState.Visible);
-            grid.Cards[1].State.Should().Be(CardState.Visible);
-            grid.Cards[2].State.Should().Be(CardState.Hidden);
+            grid.GetCard(1).State.Should().Be(Card.CardState.Visible);
+            grid.GetCard(2).State.Should().Be(Card.CardState.Visible);
+            grid.GetCard(3).State.Should().Be(Card.CardState.Hidden);
         }
 
         [Fact(DisplayName = "Une fois qu'un joueur a révélé une carte, il ne peut pas la cacher")]
@@ -106,9 +108,15 @@ namespace Memory.Tests {
         {
             GridGame grid = new GridGame(Player.Player1, Player.Player2);
             grid.Start();
-            grid.Cards[0].Show();
-            grid.Cards[0].Show();
-            grid.Cards[0].State.Should().Be(CardState.Visible);
+            grid.Show(1);
+            grid.Show(2);
+            grid.GetCard(1).State.Should().Be(Card.CardState.Visible);
         }
+
+    }
+
+    public static class GridGameExtensions
+    {
+        public static Card GetCard(this GridGame game, int cardId) => game.Cards.First(a => a.CardId == cardId);
     }
 }

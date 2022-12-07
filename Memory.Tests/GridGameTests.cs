@@ -114,6 +114,26 @@ namespace Memory.Tests {
             grid.GetCard(grid.GetCardId(0)).State.Should().Be(Card.CardState.Visible);
         }
 
+        /// <summary>
+        /// Les ImagesId doivent être distribués de manière aléatoires dans les cartes à chaque partie.
+        /// Attention, chaque Id doit etre compris entre 1 et n * 8 (n étant le nombre de joueur)
+        /// </summary>
+        [Fact(DisplayName = "Distribution aléatoire des images")]
+        public void Test118()
+        {
+            var imagesIds = Array.Empty<int>();
+
+            for (int i = 0; i < 10; i++)
+            {
+                GridGame grid = new GridGame(Player.Player1, Player.Player2);
+                var allImages = grid.Cards.Select(a => a.ImageId).ToArray();
+                allImages.Should().NotBeEquivalentTo(imagesIds);
+                imagesIds = allImages;
+
+                allImages.All(a => a is >= 1 and <= (2 * 8)).Should().BeTrue();
+            }
+        }
+
     }
 
     public static class GridGameExtensions

@@ -4,8 +4,6 @@ namespace MemoryEngine;
 
 public class GridGame
 {
-    
-
     public GridGame(params Player[] players)
     {
         if (players.Length < 2)
@@ -32,12 +30,6 @@ public class GridGame
     public Card[] Cards { get; }
 
     public Player CurrentPlayer { get; set; }
-
-    public void NextPlayer()
-    {
-        CurrentPlayer = (Player)(((int)CurrentPlayer + 1) % 3);
-        CardsRevealedByCurrentPlayer = 0;
-    }
 
     public int[] ShuffledImageId()
     {
@@ -69,9 +61,14 @@ public class GridGame
         {
             if (CurrentPlayer != Player.None && CardsRevealedByCurrentPlayer < 2)
             {
-                card.State = Card.CardState.Visible;
+                card.State = CardState.Visible;
                 CardsRevealedByCurrentPlayer++;
             }
         }
+    }
+
+    public CheckState Check()
+    {
+        throw new NotImplementedException();
     }
 }

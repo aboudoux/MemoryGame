@@ -30,21 +30,11 @@ public class GridGame
     public Card[] Cards { get; }
 
     public Player CurrentPlayer { get; set; }
-
-    public int[] ShuffledImageId()
-    {
-        var numbers = Enumerable.Range(1, 8);
-
-        Random random = new Random();
-
-        var shuffledNumbers = numbers.OrderBy(x => random.Next()).ToArray();
-
-        return shuffledNumbers;
-    }
+   
+    
 
     public void Start()
     {
-        //throw new NotImplementedException();
         CurrentPlayer = Player.Player1;
     }
 
@@ -87,5 +77,15 @@ public class GridGame
             CurrentPlayer = Player.Player2;
             return CheckState.PairNotFound;
         }
+    }
+
+    private int[] ShuffledImageId() {
+        var numbers = Enumerable.Range(1, 8);
+
+        Random random = new Random();
+
+        var shuffledNumbers = numbers.OrderBy(x => random.Next()).ToArray();
+
+        return shuffledNumbers;
     }
 }

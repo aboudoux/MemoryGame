@@ -24,6 +24,8 @@ public class GridGame
             cards.Add(new Card(CardId.GetId(), shuffledNumbers[5]));
             cards.Add(new Card(CardId.GetId(), shuffledNumbers[6]));
             cards.Add(new Card(CardId.GetId(), shuffledNumbers[7]));
+
+            Score[player] = 0;
         }
         Cards = cards.ToArray();
     }
@@ -38,6 +40,7 @@ public class GridGame
         CurrentPlayer = Player.Player1;
     }
 
+    private List<Card> CurrentPlayerCards = new List<Card>();
     private int CardsRevealedByCurrentPlayer = 0;
 
     public void Show(int cardId)
@@ -52,6 +55,7 @@ public class GridGame
             if (CurrentPlayer != Player.None && CardsRevealedByCurrentPlayer < 2)
             {
                 card.State = CardState.Visible;
+                CurrentPlayerCards.Add(card);
                 CardsRevealedByCurrentPlayer++;
             }
         }
@@ -59,25 +63,45 @@ public class GridGame
 
     public CheckState Check()
     {
-        var VisibleCards = Cards.Where(c => c.State == CardState.Visible);
-
-        var c1 = VisibleCards.First();
-        var c2 = VisibleCards.Last();
+        var c1 = CurrentPlayerCards[0];
+        var c2 = CurrentPlayerCards[1];
 
         if (c1.ImageId == c2.ImageId)
         {
             c1.State = CardState.Removed;
             c2.State = CardState.Removed;
+            Score[CurrentPlayer]++;
             return CheckState.PairFound;
         }
         else
         {
-            c1.State = CardState.Hidden;
-            c2.State = CardState.Hidden;
-            CurrentPlayer = Player.Player2;
-            return CheckState.PairNotFound;
+            if (CurrentPlayer == Player.Player1)
+            {
+                c1.State = CardState.Hidden;
+                c2.State = CardState.Hidden;
+                CurrentPlayer = Player.Player2;
+                return CheckState.PairNotFound;
+            }
+            else if (CurrentPlayer == Player.Player2)
+            {
+                c1.State = CardState.Hidden;
+                c2.State = CardState.Hidden;
+                CurrentPlayer = Player.Player3;
+                return CheckState.PairNotFound;
+            }
+            else
+            {
+                c1.State = CardState.Hidden;
+                c2.State = CardState.Hidden;
+                CurrentPlayer = Player.Player1;
+                return CheckState.PairNotFound;
+            }
         }
     }
+
+    public Dictionary<Player, int> Score = new Dictionary<Player, int>();
+
+
 
     private int[] ShuffledImageId() {
         var numbers = Enumerable.Range(1, 8);

@@ -84,7 +84,7 @@ public class GridGamePlayTests
         grid.Check().Should().Be(CheckState.PairFound);
         grid.CurrentPlayer.Should().Be(Player.Player1);
 
-        grid.Score[Player.Player1].Should.Be(1);
-        grid.Score[Player.Player2].Should.Be(0);
+        grid.Score[Player.Player1].Should().Be(1);
+        grid.Score[Player.Player2].Should().Be(0);
     }
 }

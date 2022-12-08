@@ -1,5 +1,7 @@
-﻿<div class="hover:cursor-pointer hover:scale-110 duration-500 h-32 w-32 rounded-lg shadow-2xl text-center text-white font-bold @CssBackground flip-y p-2">
-  @SvgIcon.Image2
+﻿@using MemoryEngine
+
+<div @onclick="Clicked" class="hover:cursor-pointer hover:scale-110 duration-500 h-32 w-32 rounded-lg shadow-2xl text-center text-white font-bold p-2 @CssBackground">
+  @Image
 </div>
 
 
@@ -85,7 +87,26 @@
     [Parameter]
     public int Background { get; set; } = 1;
 
-    public string CssBackground => Background switch {0 => "", 1 => "p1", 2 => "p2", 3 => "p3", 4 => "p4", _ => throw new InvalidDataException()};
+    [Parameter]
+    public MemoryEngine.Card Source { get; set; }
 
+    [Parameter]
+    public EventCallback<MemoryEngine.Card> OnClick { get; set; }
 
+    public string CssBackground => Source.State == CardState.Hidden
+        ? Background switch {0 => "", 1 => "p1", 2 => "p2", 3 => "p3", 4 => "p4", _ => throw new InvalidDataException()}
+        : string.Empty;
+
+    public RenderFragment Image => Source.State == CardState.Visible
+        ? Source.ImageId switch {
+            1 => SvgIcon.Image1,
+            2 => SvgIcon.Image2,
+            _ => throw new Exception()
+            }
+        : _ => { };
+
+    private void Clicked()
+    {
+        OnClick.InvokeAsync(Source);
+    }
 }

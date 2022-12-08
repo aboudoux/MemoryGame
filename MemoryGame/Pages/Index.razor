@@ -1,5 +1,17 @@
 ﻿@page "/"
+@using MemoryEngine
+@using Card = MemoryGame.Components.Card
 
 <PageTitle>Welcome to memory !</PageTitle>
 
-<Card Background="0"></Card>
+<Card Background="3" Source="card" OnClick="OnClick"></Card>
+
+@code
+{
+    MemoryEngine.Card card = new(1, 1);
+
+    public void OnClick(MemoryEngine.Card card)
+    {
+        card.State = CardState.Visible;
+    }
+}

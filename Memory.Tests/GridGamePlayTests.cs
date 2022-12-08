@@ -87,4 +87,25 @@ public class GridGamePlayTests
         grid.Score[Player.Player1].Should().Be(1);
         grid.Score[Player.Player2].Should().Be(0);
     }
+
+    [Fact(DisplayName = "Lorsqu'il n'y a plus de cartes visible, je jeu s'arrete.")]
+    public void Test92()
+    {
+        GridGame grid = new GridGame(Player.Player1, Player.Player2);
+        grid.Start();
+        for (int i = 1; i <= 8; i++)
+        {
+            var c1 = grid.Cards.First(a => a.ImageId == i);
+            var c2 = grid.Cards.First(a => a.ImageId == i && a.CardId != c1.CardId);
+            grid.Show(c1.CardId);
+            grid.Show(c2.CardId);
+            grid.Check().Should().Be(CheckState.PairFound);
+
+            c1.State.Should().Be(CardState.Removed);
+            c2.State.Should().Be(CardState.Removed);
+        }
+
+        grid.Score[Player.Player1].Should().Be(8);
+        grid.Cards.All(a=>a.State == CardState.Removed).Should().BeTrue();
+    }
 }

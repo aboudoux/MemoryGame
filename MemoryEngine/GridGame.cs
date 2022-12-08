@@ -99,7 +99,7 @@ public class GridGame
         }
     }
 
-    public Dictionary<Player, int> Score = new Dictionary<Player, int>();
+    public Dictionary<Player, int> Score = new();
 
 
 

@@ -88,7 +88,7 @@ public class GridGamePlayTests
         grid.Score[Player.Player2].Should().Be(0);
     }
 
-    [Fact(DisplayName = "Lorsqu'il n'y a plus de cartes visible, je jeu s'arrete.")]
+    [Fact(DisplayName = "Lorsqu'il n'y a plus de cartes visible, le jeu s'arrete.")]
     public void Test92()
     {
         GridGame grid = new GridGame(Player.Player1, Player.Player2);

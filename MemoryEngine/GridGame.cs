@@ -71,6 +71,13 @@ public class GridGame
             c1.State = CardState.Removed;
             c2.State = CardState.Removed;
             Score[CurrentPlayer]++;
+            ClearRevelatedCards();
+
+            if (Cards.All(c => c.State == CardState.Removed))
+            {
+                CurrentPlayer = Player.None;
+            }
+
             return CheckState.PairFound;
         }
         else
@@ -80,6 +87,7 @@ public class GridGame
                 c1.State = CardState.Hidden;
                 c2.State = CardState.Hidden;
                 CurrentPlayer = Player.Player2;
+                ClearRevelatedCards();
                 return CheckState.PairNotFound;
             }
             else if (CurrentPlayer == Player.Player2)
@@ -87,6 +95,7 @@ public class GridGame
                 c1.State = CardState.Hidden;
                 c2.State = CardState.Hidden;
                 CurrentPlayer = Player.Player3;
+                ClearRevelatedCards();
                 return CheckState.PairNotFound;
             }
             else
@@ -94,9 +103,16 @@ public class GridGame
                 c1.State = CardState.Hidden;
                 c2.State = CardState.Hidden;
                 CurrentPlayer = Player.Player1;
+                ClearRevelatedCards();
                 return CheckState.PairNotFound;
             }
         }
+    }
+
+    private void ClearRevelatedCards()
+    {
+        CurrentPlayerCards.Clear();
+        CardsRevealedByCurrentPlayer = 0;
     }
 
     public Dictionary<Player, int> Score = new();

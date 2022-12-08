@@ -5,7 +5,7 @@ namespace Memory.Tests;
 
 public class GridGamePlayTests
 {
-    [Fact(DisplayName = "joueur 1 ne trouve pas de paire")]
+    [Fact(DisplayName = "Le joueur 1 ne trouve pas de paire")]
     public void Test138() 
     {
         GridGame grid = new GridGame(Player.Player1, Player.Player2);
@@ -22,7 +22,7 @@ public class GridGamePlayTests
         grid.Cards.All(a=>a.State == CardState.Hidden).Should().BeTrue();
     }
 
-    [Fact(DisplayName = "joueur 1 trouve une paire")]
+    [Fact(DisplayName = "Le joueur 1 trouve une paire")]
     public void Test139() 
     {
         GridGame grid = new GridGame(Player.Player1, Player.Player2);

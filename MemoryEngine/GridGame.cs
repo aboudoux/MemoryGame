@@ -69,6 +69,23 @@ public class GridGame
 
     public CheckState Check()
     {
-        throw new NotImplementedException();
+        var VisibleCards = Cards.Where(c => c.State == CardState.Visible);
+
+        var c1 = VisibleCards.First();
+        var c2 = VisibleCards.Last();
+
+        if (c1.ImageId == c2.ImageId)
+        {
+            c1.State = CardState.Removed;
+            c2.State = CardState.Removed;
+            return CheckState.PairFound;
+        }
+        else
+        {
+            c1.State = CardState.Hidden;
+            c2.State = CardState.Hidden;
+            CurrentPlayer = Player.Player2;
+            return CheckState.PairNotFound;
+        }
     }
 }

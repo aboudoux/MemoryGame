@@ -61,6 +61,9 @@ public class GridGame
         }
     }
 
+    public GameStatus Status = new();
+
+
     public CheckState Check()
     {
         var c1 = CurrentPlayerCards[0];
@@ -117,8 +120,6 @@ public class GridGame
 
     public Dictionary<Player, int> Score = new();
 
-
-
     private int[] ShuffledImageId() {
         var numbers = Enumerable.Range(1, 8);
 
@@ -129,3 +130,18 @@ public class GridGame
         return shuffledNumbers;
     }
 }
+
+public class GameStatus
+{
+    public Player Winner { get; set; }
+    public GameState State { get; set; } = GameState.NotStarted;
+}
+
+public enum GameState
+{
+    NotStarted,
+    Playing,
+    PlayerWin,
+    Execo,
+}
+

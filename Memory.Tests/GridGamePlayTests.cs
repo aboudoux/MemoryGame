@@ -107,5 +107,94 @@ public class GridGamePlayTests
 
         grid.Score[Player.Player1].Should().Be(8);
         grid.Cards.All(a=>a.State == CardState.Removed).Should().BeTrue();
+        grid.Check().Should().Be(CheckState.GameOver);
+
+        grid.Status.State.Should().Be(GameState.PlayerWin);
+        grid.Status.Winner.Should().Be(Player.Player1);
+    }
+
+    [Fact(DisplayName = "si je ne demarre pas, le statut est a not started")]
+    public void Test117()
+    {
+        GridGame grid = new GridGame(Player.Player1, Player.Player2);
+        grid.Status.State.Should().Be(GameState.NotStarted);
+    }
+
+    [Fact(DisplayName = "tant que le jeu n'est pas fini, on est en status playing")]
+    public void Test124()
+    {
+        GridGame grid = new GridGame(Player.Player1, Player.Player2);
+        grid.Start();
+
+        var c1 = grid.Cards.First(a => a.ImageId == 1);
+        var c2 = grid.Cards.First(a => a.ImageId == 1 && a.CardId != c1.CardId);
+
+        grid.Show(c1.CardId);
+        grid.Show(c2.CardId);
+
+        grid.Status.State.Should().Be(GameState.Playing);
+    }
+
+    [Theory(DisplayName = "un joueur gagne")]
+    [InlineData(Player.Player1, Player.Player2)]
+    [InlineData(Player.Player2, Player.Player1)]
+    public void Test141(Player player1, Player player2)
+    {
+        GridGame grid = new GridGame(player1, player2);
+        grid.Start();
+        for (int i = 1; i <= 5; i++) {
+            var c1 = grid.Cards.First(a => a.ImageId == i);
+            var c2 = grid.Cards.First(a => a.ImageId == i && a.CardId != c1.CardId);
+            grid.Show(c1.CardId);
+            grid.Show(c2.CardId);
+            grid.Check().Should().Be(CheckState.PairFound);
+
+            c1.State.Should().Be(CardState.Removed);
+            c2.State.Should().Be(CardState.Removed);
+        }
+
+        var cc1 = grid.Cards.First(a=>a.State == CardState.Hidden);
+        var cc2 = grid.Cards.First(a => a.State == CardState.Hidden && a.ImageId != cc1.ImageId);
+        grid.Show(cc1.CardId);
+        grid.Show(cc2.CardId);
+        grid.CurrentPlayer.Should().Be(player2);
+
+        for (int i = 1; i <= 3; i++) {
+            var c1 = grid.Cards.First(a => a.ImageId == i);
+            var c2 = grid.Cards.First(a => a.ImageId == i && a.CardId != c1.CardId);
+            grid.Show(c1.CardId);
+            grid.Show(c2.CardId);
+            grid.Check().Should().Be(CheckState.PairFound);
+
+            c1.State.Should().Be(CardState.Removed);
+            c2.State.Should().Be(CardState.Removed);
+        }
+
+        grid.Status.State.Should().Be(GameState.PlayerWin);
+        grid.Status.Winner.Should().Be(player1);
+    }
+
+    [Fact(DisplayName = "Je fait un check sans retourner de cartes")]
+    public void Test178()
+    {
+        GridGame grid = new GridGame(Player.Player1, Player.Player2);
+        grid.Start();
+        grid.Check().Should().Be(CheckState.CantCheck);
+    }
+
+    [Fact(DisplayName = "Je fait un check en ne retournant qu'une seule carte")]
+    public void Test171() 
+    {
+        GridGame grid = new GridGame(Player.Player1, Player.Player2);
+        grid.Start();
+        grid.Show(grid.Cards.First().CardId);
+        grid.Check().Should().Be(CheckState.CantCheck);
+    }
+
+    [Fact(DisplayName = "Check sans avoir démarré")]
+    public void Test195()
+    {
+        GridGame grid = new GridGame(Player.Player1, Player.Player2);
+        grid.Check().Should().Be(CheckState.NotStarted);
     }
 }

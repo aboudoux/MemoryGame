@@ -6,14 +6,19 @@
 
 @if (!_game.IsGameStarted)
 {
-    <button @onclick="StartGame">START NEW GAME</button>
+    <button @onclick="StartGame" class="bg-green-500 hover:bg-green-400 text-white font-bold py-2 px-4 rounded-lg">START NEW GAME</button>
 } 
 else
 {
-    <div class="flex flex-row justify-center">
+    <div class="flex flex-col justify-center w-full items-center bg-gray-200">
+      <div class="flex flex-row justify-between w-full">
+          <div class="text-4xl font-bold @CssTurnPlayer(Player.Player1)">Player 1 : @_game.Score[Player.Player1].ToString()</div>
+          <div class="text-4xl font-bold @CssTurnPlayer(Player.Player2)">Player 2 : @_game.Score[Player.Player2].ToString()</div>
+        </div>
         <div class="grid grid-rows-[max-content,max-content,max-content,max-content] grid-cols-[max-content,max-content,max-content,max-content] gap-8">
-            @foreach (var card in _game.Cards) {
-            <div><Card Background="@BackgroundId" Source="card" OnClick="OnClick"></Card></div>
+            @foreach (var card in _game.Cards)
+            {
+                <div><Card Background="@BackgroundId" Source="card" OnClick="OnClick"></Card></div>
             }
         </div>
     </div>
@@ -23,6 +28,8 @@ else
 {
     private GridGame _game = new(Player.Player1, Player.Player2);
     private int BackgroundId { get; set; } = 1;
+
+    private string CssTurnPlayer(Player player) => _game.CurrentPlayer == player ? "border-red-500 border-2 rounded-lg p-2 bg-red-300" : string.Empty;
 
     private void StartGame()
     {

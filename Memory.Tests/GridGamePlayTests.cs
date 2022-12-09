@@ -25,16 +25,14 @@ public class GridGamePlayTests
     [Fact(DisplayName = "chaque joueur qui perd passe son tour au joueur suivant")]
     public void Test26()
     {
-        GridGame grid = new GridGame(Player.Player1, Player.Player2, Player.Player3);
+        GridGame grid = new GridGame(Player.Player1, Player.Player2);
         grid.Start();
         var c1 = grid.Cards.First(a => a.ImageId == 1);
         var c2 = grid.Cards.First(a => a.ImageId == 2);
 
         PlayAndEnsureNextPlayerIs(Player.Player2);
-        PlayAndEnsureNextPlayerIs(Player.Player3);
         PlayAndEnsureNextPlayerIs(Player.Player1);
         PlayAndEnsureNextPlayerIs(Player.Player2);
-        PlayAndEnsureNextPlayerIs(Player.Player3);
         PlayAndEnsureNextPlayerIs(Player.Player1);
 
         void PlayAndEnsureNextPlayerIs(Player player)

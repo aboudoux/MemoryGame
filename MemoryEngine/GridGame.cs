@@ -128,7 +128,7 @@ public class GridGame
             {
                 c1.State = CardState.Hidden;
                 c2.State = CardState.Hidden;
-                CurrentPlayer = Player.Player3;
+                CurrentPlayer = Player.Player1;
                 ClearRevelatedCards();
                 return CheckState.PairNotFound;
             }

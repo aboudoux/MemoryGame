@@ -32,12 +32,14 @@ public class GridGame
     public Card[] Cards { get; }
 
     public Player CurrentPlayer { get; set; }
-   
-    
+
+    public bool IsGameStarted { get; private set; } = false;
 
     public void Start()
     {
         CurrentPlayer = Player.Player1;
+        IsGameStarted = true;
+        Status.State = GameState.Playing;
     }
 
     private List<Card> CurrentPlayerCards = new List<Card>();
@@ -66,6 +68,33 @@ public class GridGame
 
     public CheckState Check()
     {
+        if (!IsGameStarted)
+        {
+            return CheckState.NotStarted;
+        }
+
+        if (CurrentPlayerCards.Count() != 2)
+        {
+            if (Cards.All(c => c.State == CardState.Removed))
+            {
+                CurrentPlayer = Player.None;
+                if (Score[Player.Player1] > Score[Player.Player2])
+                {
+                    Status.State = GameState.PlayerWin;
+                    Status.Winner = Player.Player1;
+                    return CheckState.GameOver;
+                }
+                else
+                {
+                    Status.State = GameState.PlayerWin;
+                    Status.Winner = Player.Player2;
+                    return CheckState.GameOver;
+                }
+            }
+
+            return CheckState.CantCheck;
+        }
+
         var c1 = CurrentPlayerCards[0];
         var c2 = CurrentPlayerCards[1];
 
@@ -75,11 +104,6 @@ public class GridGame
             c2.State = CardState.Removed;
             Score[CurrentPlayer]++;
             ClearRevelatedCards();
-
-            if (Cards.All(c => c.State == CardState.Removed))
-            {
-                CurrentPlayer = Player.None;
-            }
 
             return CheckState.PairFound;
         }
@@ -109,6 +133,8 @@ public class GridGame
                 ClearRevelatedCards();
                 return CheckState.PairNotFound;
             }
+
+
         }
     }
 
@@ -144,4 +170,3 @@ public enum GameState
     PlayerWin,
     Execo,
 }
-

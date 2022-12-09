@@ -120,7 +120,7 @@ public class GridGamePlayTests
         grid.Status.State.Should().Be(GameState.NotStarted);
     }
 
-    [Fact(DisplayName = "tant que le jeu n'est pas fini, on est en status playing")]
+    [Fact(DisplayName = "Tant que le jeu n'est pas fini, on est en status playing")]
     public void Test124()
     {
         GridGame grid = new GridGame(Player.Player1, Player.Player2);
@@ -157,6 +157,7 @@ public class GridGamePlayTests
         var cc2 = grid.Cards.First(a => a.State == CardState.Hidden && a.ImageId != cc1.ImageId);
         grid.Show(cc1.CardId);
         grid.Show(cc2.CardId);
+        grid.Check().Should().Be(CheckState.PairNotFound);
         grid.CurrentPlayer.Should().Be(player2);
 
         for (int i = 1; i <= 3; i++) {
@@ -170,6 +171,7 @@ public class GridGamePlayTests
             c2.State.Should().Be(CardState.Removed);
         }
 
+        grid.Check().Should().Be(CheckState.GameOver);
         grid.Status.State.Should().Be(GameState.PlayerWin);
         grid.Status.Winner.Should().Be(player1);
     }

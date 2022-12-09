@@ -137,7 +137,49 @@ public class GridGamePlayTests
         grid.Status.State.Should().Be(GameState.Playing);
     }
 
-    [Theory(DisplayName = "un joueur gagne")]
+    [Theory(DisplayName = "La partie se termine en égalité")]
+    [InlineData(Player.Player1, Player.Player2)]
+    public void Test542(Player player1, Player player2)
+    {
+        GridGame grid = new GridGame(player1, player2);
+        grid.Start();
+        for (int i = 1; i <= 4; i++)
+        {
+            var c1 = grid.Cards.First(a => a.State == CardState.Hidden);
+            var c2 = grid.Cards.First(a => a.ImageId == c1.ImageId && a.CardId != c1.CardId);
+            grid.Show(c1.CardId);
+            grid.Show(c2.CardId);
+            grid.Check().Should().Be(CheckState.PairFound);
+
+            c1.State.Should().Be(CardState.Removed);
+            c2.State.Should().Be(CardState.Removed);
+        }
+
+        var cc1 = grid.Cards.First(a => a.State == CardState.Hidden);
+        var cc2 = grid.Cards.First(a => a.State == CardState.Hidden && a.ImageId != cc1.ImageId);
+        grid.Show(cc1.CardId);
+        grid.Show(cc2.CardId);
+        grid.Check().Should().Be(CheckState.PairNotFound);
+        grid.CurrentPlayer.Should().Be(player2);
+
+        for (int i = 1; i <= 4; i++)
+        {
+            var c1 = grid.Cards.First(a => a.State == CardState.Hidden);
+            var c2 = grid.Cards.First(a => a.ImageId == c1.ImageId && a.CardId != c1.CardId);
+            grid.Show(c1.CardId);
+            grid.Show(c2.CardId);
+            grid.Check().Should().Be(CheckState.PairFound);
+
+            c1.State.Should().Be(CardState.Removed);
+            c2.State.Should().Be(CardState.Removed);
+        }
+
+        grid.Check().Should().Be(CheckState.GameOver);
+        grid.Status.State.Should().Be(GameState.Execo);
+        grid.Status.Winner.Should().Be(Player.None);
+    }
+
+    [Theory(DisplayName = "Un joueur gagne")]
     [InlineData(Player.Player1, Player.Player2)]
     public void Test141(Player player1, Player player2)
     {

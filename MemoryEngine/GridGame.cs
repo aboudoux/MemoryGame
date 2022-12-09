@@ -91,7 +91,12 @@ public class GridGame
             if (Cards.All(c => c.State == CardState.Removed))
             {
                 CurrentPlayer = Player.None;
-                if (Score[Player.Player1] > Score[Player.Player2])
+                if (Score[Player.Player1] == Score[Player.Player2])
+                {
+                    Status.State = GameState.Execo;
+                    Status.Winner = Player.None;
+                }
+                else if (Score[Player.Player1] > Score[Player.Player2])
                 {
                     Status.State = GameState.PlayerWin;
                     Status.Winner = Player.Player1;

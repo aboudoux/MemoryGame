@@ -106,11 +106,15 @@ public class GridGamePlayTests
         }
 
         grid.Score[Player.Player1].Should().Be(8);
-        grid.Cards.All(a=>a.State == CardState.Removed).Should().BeTrue();
-        grid.Check().Should().Be(CheckState.GameOver);
 
-        grid.Status.State.Should().Be(GameState.PlayerWin);
+        grid.Check().Should().Be(CheckState.GameOver);
         grid.Status.Winner.Should().Be(Player.Player1);
+        grid.Status.State.Should().Be(GameState.PlayerWin);
+
+        grid.Cards.All(a=>a.State == CardState.Removed).Should().BeTrue();
+        
+
+        
     }
 
     [Fact(DisplayName = "si je ne demarre pas, le statut est a not started")]
@@ -137,14 +141,13 @@ public class GridGamePlayTests
 
     [Theory(DisplayName = "un joueur gagne")]
     [InlineData(Player.Player1, Player.Player2)]
-    [InlineData(Player.Player2, Player.Player1)]
     public void Test141(Player player1, Player player2)
     {
         GridGame grid = new GridGame(player1, player2);
         grid.Start();
         for (int i = 1; i <= 5; i++) {
-            var c1 = grid.Cards.First(a => a.ImageId == i);
-            var c2 = grid.Cards.First(a => a.ImageId == i && a.CardId != c1.CardId);
+            var c1 = grid.Cards.First(a => a.State == CardState.Hidden);
+            var c2 = grid.Cards.First(a => a.ImageId == c1.ImageId && a.CardId != c1.CardId);
             grid.Show(c1.CardId);
             grid.Show(c2.CardId);
             grid.Check().Should().Be(CheckState.PairFound);
@@ -161,8 +164,8 @@ public class GridGamePlayTests
         grid.CurrentPlayer.Should().Be(player2);
 
         for (int i = 1; i <= 3; i++) {
-            var c1 = grid.Cards.First(a => a.ImageId == i);
-            var c2 = grid.Cards.First(a => a.ImageId == i && a.CardId != c1.CardId);
+            var c1 = grid.Cards.First(a => a.State == CardState.Hidden);
+            var c2 = grid.Cards.First(a => a.ImageId == c1.ImageId && a.CardId != c1.CardId);
             grid.Show(c1.CardId);
             grid.Show(c2.CardId);
             grid.Check().Should().Be(CheckState.PairFound);

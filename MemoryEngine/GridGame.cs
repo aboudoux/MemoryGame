@@ -31,7 +31,7 @@ public class GridGame
     }
     public Card[] Cards { get; }
 
-    public Player CurrentPlayer { get; set; }
+    public Player CurrentPlayer { get; set; } = Player.None;
 
     public bool IsGameStarted { get; private set; } = false;
 
@@ -73,6 +73,11 @@ public class GridGame
             return CheckState.NotStarted;
         }
 
+        if (Cards.All(c => c.State == CardState.Removed) && Status.State != GameState.Playing)
+        {
+            return CheckState.GameOver;
+        }
+            
         if (CurrentPlayerCards.Count() != 2)
         {
             if (Cards.All(c => c.State == CardState.Removed))
@@ -82,14 +87,14 @@ public class GridGame
                 {
                     Status.State = GameState.PlayerWin;
                     Status.Winner = Player.Player1;
-                    return CheckState.GameOver;
                 }
                 else
                 {
                     Status.State = GameState.PlayerWin;
                     Status.Winner = Player.Player2;
-                    return CheckState.GameOver;
                 }
+
+                return CheckState.GameOver;
             }
 
             return CheckState.CantCheck;
@@ -133,8 +138,6 @@ public class GridGame
                 ClearRevelatedCards();
                 return CheckState.PairNotFound;
             }
-
-
         }
     }
 

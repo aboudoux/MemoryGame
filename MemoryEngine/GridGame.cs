@@ -52,6 +52,12 @@ public class GridGame
         {
             return CurrentPlayerCards.Count;
         }
+
+        if (card.State == CardState.Visible)
+        {
+            return CurrentPlayerCards.Count;
+        }
+
         else
         {
             if (CurrentPlayer != Player.None && CardsRevealedByCurrentPlayer < 2)

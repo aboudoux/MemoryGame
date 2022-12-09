@@ -45,12 +45,12 @@ public class GridGame
     private List<Card> CurrentPlayerCards = new List<Card>();
     private int CardsRevealedByCurrentPlayer = 0;
 
-    public void Show(int cardId)
+    public int Show(int cardId)
     {
         var card = Cards.SingleOrDefault(c => c.CardId == cardId);
         if (card == null)
         {
-            return;
+            return CurrentPlayerCards.Count;
         }
         else
         {
@@ -61,6 +61,8 @@ public class GridGame
                 CardsRevealedByCurrentPlayer++;
             }
         }
+
+        return CurrentPlayerCards.Count;
     }
 
     public GameStatus Status = new();

@@ -202,4 +202,15 @@ public class GridGamePlayTests
         GridGame grid = new GridGame(Player.Player1, Player.Player2);
         grid.Check().Should().Be(CheckState.NotStarted);
     }
+
+    [Fact(DisplayName = "Si je clique 2 fois sur la même carte, pas de reponse")]
+    public void Test207()
+    {
+        GridGame grid = new GridGame(Player.Player1, Player.Player2);
+        grid.Start();
+        grid.Show(grid.Cards.First().CardId);
+        var currentPlayerCard = grid.Show(grid.Cards.First().CardId);
+        grid.Check().Should().Be(CheckState.CantCheck);
+        currentPlayerCard.Should().Be(1);
+    }
 }

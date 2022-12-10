@@ -32,7 +32,7 @@ public class GridGameStartTests
     public void Test1((Player[] players, int expectedCards) arg)
     {
         GridGame grid = new GridGame(arg.players);
-        grid.Cards.Length.Should().Be(arg.expectedCards);
+        grid.Cards.Length.Should().Be(16);
     }
 
     [Fact(DisplayName = "Tous les id de cartes doivents être unique")]

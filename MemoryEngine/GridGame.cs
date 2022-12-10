@@ -1,4 +1,5 @@
 ﻿using MemoryEngine.Exceptions;
+using System.Numerics;
 
 namespace MemoryEngine;
 
@@ -13,20 +14,27 @@ public class GridGame
             throw new SamePlayerException();
 
         List<Card> cards = new List<Card>();
-        foreach (var player in players)
-        {
-            var shuffledNumbers = ShuffledImageId();
-            cards.Add(new Card(CardId.GetId(), shuffledNumbers[0]));
-            cards.Add(new Card(CardId.GetId(), shuffledNumbers[1]));
-            cards.Add(new Card(CardId.GetId(), shuffledNumbers[2]));
-            cards.Add(new Card(CardId.GetId(), shuffledNumbers[3]));
-            cards.Add(new Card(CardId.GetId(), shuffledNumbers[4]));
-            cards.Add(new Card(CardId.GetId(), shuffledNumbers[5]));
-            cards.Add(new Card(CardId.GetId(), shuffledNumbers[6]));
-            cards.Add(new Card(CardId.GetId(), shuffledNumbers[7]));
+        var shuffledNumbers = ShuffledImageId();
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[0]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[1]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[2]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[3]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[4]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[5]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[6]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[7]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[0]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[1]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[2]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[3]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[4]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[5]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[6]));
+        cards.Add(new Card(CardId.GetId(), shuffledNumbers[7]));
 
-            Score[player] = 0;
-        }
+        Score[Player.Player1] = 0;
+        Score[Player.Player2] = 0;
+
         Cards = cards.ToArray();
     }
     public Card[] Cards { get; }
